@@ -26,4 +26,4 @@ jobs:
         run: node tools/test-plugin.mjs
 
       - name: Publish to npm
-        run: npm publish --provenance --access public --loglevel silly
+        run: npm publish --provenance --access public
