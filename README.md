@@ -1,5 +1,7 @@
 # dsh-codemap
 
+[![npm](https://img.shields.io/npm/v/dsh-codemap.svg)](https://www.npmjs.com/package/dsh-codemap)
+
 Project-scoped code graph tools for DeepSeek Harness, backed by the `codemap`
 CLI. It registers nine Host tools once and decides the repository per call, so
 a new workspace needs no configuration: open a session inside an indexed
@@ -8,11 +10,15 @@ repository and the tools work.
 ## Install
 
 ```sh
+# from npm (recommended)
+dsh plugin --profile <profile> add dsh-codemap
+
+# or straight from this repository
 dsh plugin --profile <profile> add github:vip-pan/dsh-codemap
 ```
 
-The desktop app's plugin manager can also install this directory directly.
-The bundle contributes one profile row (`codemap`) and no client UI.
+The desktop app's plugin manager or plugin market can also install the bundle;
+the profile gains one row (`codemap`) and no client UI.
 
 ## Tools
 
@@ -85,6 +91,21 @@ node tools/test-broker.mjs      # offline: repository-root discovery
 CODEMAP_TEST_REPO=/path/to/indexed/repo node tools/test-plugin.mjs
 CODEMAP_TEST_REPO=/path/to/indexed/repo CODEMAP_TEST_SYMBOL=SomeSymbol node tools/test-broker.mjs
 ```
+
+## Releasing
+
+Releases are published by GitHub Actions through npm trusted publishing
+(OIDC), so no tokens are stored in the repository:
+
+```sh
+npm version patch --no-git-tag-version   # or edit package.json
+git commit -am "chore: release vX.Y.Z"
+git tag vX.Y.Z
+git push origin main --tags
+```
+
+The `Publish Package` workflow verifies the tool contract, then runs
+`npm publish --provenance` against the npm registry.
 
 ## License
 

@@ -1,6 +1,6 @@
 {
   "name": "dsh-codemap",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Project-scoped code graph tools for DeepSeek Harness: one plugin serves every workspace, backed by the codemap CLI over MCP.",
   "type": "module",
   "license": "MIT",
