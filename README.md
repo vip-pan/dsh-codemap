@@ -43,7 +43,12 @@ repositories never share an index.
 ## Requirements
 
 This plugin does not ship `codemap`; it is only an MCP client for the
-`codemap serve` server that the CLI provides. Install the CLI separately.
+`codemap serve` server that the CLI provides. Install the CLI separately, for
+example with its installer:
+
+```sh
+curl -fsSL https://codemaker.nie.netease.com/codemap-package/codemap/install.sh | sh
+```
 
 - The `codemap` CLI, resolved from `CODEMAP_BIN`, `~/.local/codemap/codemap`,
   or `PATH`.
