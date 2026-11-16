@@ -1,0 +1,243 @@
+[
+  {
+    "name": "find_symbol",
+    "description": "Find symbols by exact name, prefix, or suffix. Returns all symbols matching the given names across the codebase. Supports batch: pass an array of names to find multiple symbols in one call; results are grouped per name.",
+    "inputSchema": {
+      "properties": {
+        "limit": {
+          "description": "Maximum number of results per name (default: 7, max: 50)",
+          "type": "number"
+        },
+        "match_type": {
+          "description": "Match mode: 'exact' (default, with suffix fallback), 'prefix' (name STARTS WITH), 'suffix' (qual_name ENDS WITH)",
+          "type": "string"
+        },
+        "symbol_name": {
+          "description": "One or more symbol names to search for. Each name is searched independently. A symbol name is the simple name or qualified ClassName.method, NOT a file path. Example: [\"parse_config\"] or [\"Player.attack\", \"Enemy.update\"].",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "symbol_name"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "name": "get_call_chain",
+    "description": "Get the call chain for a function/method. Returns upstream callers and/or downstream callees up to N hops. Accepts either a symbol_id or a symbol_name.",
+    "inputSchema": {
+      "properties": {
+        "depth": {
+          "description": "Number of hops to traverse (default: 1, max: 5)",
+          "type": "number"
+        },
+        "direction": {
+          "description": "Direction: 'callers' (who calls this), 'callees' (what this calls), or 'both' (default: 'both')",
+          "type": "string"
+        },
+        "limit": {
+          "description": "Maximum number of results per direction (default: 7, max: 50)",
+          "type": "number"
+        },
+        "match_type": {
+          "description": "Match mode for symbol_name resolution: 'exact' (default, with suffix fallback), 'prefix' (name STARTS WITH), 'suffix' (qual_name ENDS WITH). Only used when symbol_name is provided.",
+          "type": "string"
+        },
+        "params": {
+          "description": "Optional disambiguation for overloaded symbols: filters candidates whose signature matches these params (e.g. 'int a, int b', '(int, int)', or 'double, double'). Only used when symbol_name resolves to multiple candidates.",
+          "type": "string"
+        },
+        "symbol_id": {
+          "description": "Full symbol ID from search results (e.g. 'src/utils.py:function:parse_config'). Either symbol_id or symbol_name is required.",
+          "type": "string"
+        },
+        "symbol_name": {
+          "description": "Code symbol name — functions, methods, classes, interfaces, variables. Pass simple name ('parse_config') or qualified ('ClassName.method', 'Player.attack'). Lua 'ClassName:method' and C++/Rust 'ClassName::method' forms also resolve automatically. Resolved automatically. Either symbol_id or symbol_name is required. Single string only; for batch lookup use find_symbol.",
+          "type": "string"
+        }
+      },
+      "required": [],
+      "type": "object"
+    }
+  },
+  {
+    "name": "get_dependencies",
+    "description": "Find what symbols depend on a given symbol. Shows which functions, classes, or modules reference or call a particular symbol. Also supports asset reference queries: pass file_path to find which config/asset symbols reference that file (reverse dependency), or query a config symbol to see the files it references (forward, via kind + broken flag).",
+    "inputSchema": {
+      "properties": {
+        "file_path": {
+          "description": "File path (repo-relative) to query reverse asset dependencies for. Returns config/asset symbols that reference this file via REFERENCES_FILE, grouped by kind (material_ref/shader_ref/texture_ref/...), with a broken flag for断链. When set, symbol_id/symbol_name are ignored.",
+          "type": "string"
+        },
+        "limit": {
+          "description": "Maximum number of 'used by' callers to return (default: 7, max: 50)",
+          "type": "number"
+        },
+        "match_type": {
+          "description": "Match mode for symbol_name resolution: 'exact' (default, with suffix fallback), 'prefix' (name STARTS WITH), 'suffix' (qual_name ENDS WITH). Only used when symbol_name is provided.",
+          "type": "string"
+        },
+        "params": {
+          "description": "Optional disambiguation for overloaded symbols: filters candidates whose signature matches these params (e.g. 'int a, int b', '(int, int)', or 'double, double'). Only used when symbol_name resolves to multiple candidates.",
+          "type": "string"
+        },
+        "symbol_id": {
+          "description": "Full symbol ID from search results (e.g. 'src/utils.py:function:parse_config'). Either symbol_id or symbol_name is required.",
+          "type": "string"
+        },
+        "symbol_name": {
+          "description": "Code symbol name — functions, methods, classes, interfaces, variables. Pass simple name ('parse_config') or qualified ('ClassName.method', 'Player.attack'). Lua 'ClassName:method' and C++/Rust 'ClassName::method' forms also resolve automatically. Resolved automatically. Either symbol_id or symbol_name is required. Single string only; for batch lookup use find_symbol.",
+          "type": "string"
+        }
+      },
+      "required": [],
+      "type": "object"
+    }
+  },
+  {
+    "name": "get_graph_stats",
+    "description": "Get statistics about the code graph: number of files, symbols, call edges, and import edges.",
+    "inputSchema": {
+      "properties": {},
+      "required": [],
+      "type": "object"
+    }
+  },
+  {
+    "name": "get_symbol_detail",
+    "description": "Get detailed info for a symbol: location, signature, documentation, and optional source body.",
+    "inputSchema": {
+      "properties": {
+        "context_lines": {
+          "description": "Number of surrounding lines from the source file to include before/after the symbol (default: 0, max: 50).",
+          "type": "number"
+        },
+        "include_body": {
+          "description": "Include the full source code body in the response (default: false)",
+          "type": "boolean"
+        },
+        "match_type": {
+          "description": "Match mode for symbol_name resolution: 'exact' (default, with suffix fallback), 'prefix' (name STARTS WITH), 'suffix' (qual_name ENDS WITH). Only used when symbol_name is provided.",
+          "type": "string"
+        },
+        "params": {
+          "description": "Optional disambiguation for overloaded symbols: filters candidates whose signature matches these params (e.g. 'int a, int b', '(int, int)', or 'double, double'). Only used when symbol_name resolves to multiple candidates.",
+          "type": "string"
+        },
+        "symbol_id": {
+          "description": "Full symbol ID from search results (e.g. 'src/utils.py:function:parse_config'). Either symbol_id or symbol_name is required.",
+          "type": "string"
+        },
+        "symbol_name": {
+          "description": "Code symbol name — functions, methods, classes, interfaces, variables. Pass simple name ('parse_config') or qualified ('ClassName.method', 'Player.attack'). Lua 'ClassName:method' and C++/Rust 'ClassName::method' forms also resolve automatically. Resolved automatically. Either symbol_id or symbol_name is required. Single string only; for batch lookup use find_symbol.",
+          "type": "string"
+        }
+      },
+      "required": [],
+      "type": "object"
+    }
+  },
+  {
+    "name": "get_type_hierarchy",
+    "description": "Get the type hierarchy for a class/interface. Returns parent classes/interfaces and child implementations. Accepts either a symbol_id or a symbol_name.",
+    "inputSchema": {
+      "properties": {
+        "depth": {
+          "description": "Depth of hierarchy traversal (default: 3, max: 5)",
+          "type": "number"
+        },
+        "limit": {
+          "description": "Maximum number of results per direction (default: 7, max: 50)",
+          "type": "number"
+        },
+        "match_type": {
+          "description": "Match mode for symbol_name resolution: 'exact' (default, with suffix fallback), 'prefix' (name STARTS WITH), 'suffix' (qual_name ENDS WITH). Only used when symbol_name is provided.",
+          "type": "string"
+        },
+        "params": {
+          "description": "Optional disambiguation for overloaded symbols: filters candidates whose signature matches these params (e.g. 'int a, int b', '(int, int)', or 'double, double'). Only used when symbol_name resolves to multiple candidates.",
+          "type": "string"
+        },
+        "symbol_id": {
+          "description": "Full symbol ID from search results (e.g. 'src/utils.py:function:parse_config'). Either symbol_id or symbol_name is required.",
+          "type": "string"
+        },
+        "symbol_name": {
+          "description": "Code symbol name — functions, methods, classes, interfaces, variables. Pass simple name ('parse_config') or qualified ('ClassName.method', 'Player.attack'). Lua 'ClassName:method' and C++/Rust 'ClassName::method' forms also resolve automatically. Resolved automatically. Either symbol_id or symbol_name is required. Single string only; for batch lookup use find_symbol.",
+          "type": "string"
+        }
+      },
+      "required": [],
+      "type": "object"
+    }
+  },
+  {
+    "name": "query_cypher",
+    "description": "Execute a read-only Cypher query against the code graph database. Use for counting, ranking, or aggregation questions: 'how many functions in file X?', 'which class has the most methods?', 'what are the most-called functions?', 'find duplicate symbol names', 'how many exported symbols?'. MATCH/CALL/WITH/RETURN/ORDER BY/LIMIT/WHERE allowed; CREATE/DELETE/SET/MERGE/DROP/DETACH/REMOVE blocked. Results capped at 500 rows.",
+    "inputSchema": {
+      "properties": {
+        "limit": {
+          "description": "Maximum number of result rows (default: 50, max: 500)",
+          "type": "number"
+        },
+        "query": {
+          "description": "Read-only Cypher query to execute",
+          "type": "string"
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "name": "search_code",
+    "description": "Hybrid code search: full-text keyword (BM25) + semantic vector search (if embeddings enabled), fused via Reciprocal Rank Fusion. Use for fuzzy keyword or concept-based symbol lookup. For exact name lookup or listing symbols in a file, prefer find_symbol.",
+    "inputSchema": {
+      "properties": {
+        "limit": {
+          "description": "Maximum number of results per match (default: 7, max: 50)",
+          "type": "number"
+        },
+        "matches": {
+          "description": "Array of search items. Each item is either a plain query string for unconstrained text search, or an object {query, kind?, file_pattern?} with filters. query: keyword text (searches symbol names/signatures/docs). kind: optional comma-separated symbol kinds (function, method, class, interface, variable, constant, field, type, module). file_pattern: optional file path filter. By default a CONTAINS substring (not glob). Prefixed with \"re:\" it switches to a Go RE2 regexp matched against the FULL file path (e.g. \"re:.*\\.py$\" matches paths ending in .py; \"re:src/.*?/api/.*_test\\.go\" matches Go test files under any api dir). Regex mode resolves paths via the File node table first, then narrows Symbol results — safe for patterns that CONTAINS would misread as literals (\"re:a.*\\.py\" does NOT match the literal string \"a.*.py\"). Examples: plain text search: [\"parse config\"]; find all functions in a file: [{\"query\":\"\", \"kind\":\"function\", \"file_pattern\":\"trade.c\"}]; regex-filtered search: [{\"query\":\"Player\", \"kind\":\"class\", \"file_pattern\":\"re:.*\\\\.py$\"}]",
+          "items": {},
+          "type": "array"
+        }
+      },
+      "required": [
+        "matches"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "name": "search_knowledge",
+    "description": "Search knowledge documents (.codemaker/codeindex/, .codemaker/knowledge/, openspec/) for business rules, architecture constraints, API descriptions, and boundary conditions. Only available when codeindex/kb-config.json exists. Complements search_code: use search_code for symbol lookup, use search_knowledge for business rules and design context. Knowledge documents are written in Chinese — use Chinese keywords for best results.",
+    "inputSchema": {
+      "properties": {
+        "limit": {
+          "description": "Maximum number of matched snippets to return (default: 3, max: 10)",
+          "type": "number"
+        },
+        "module": {
+          "description": "Optional: restrict search to a specific module path (e.g. 'scripts/combat'). Matches any doc path containing this substring.",
+          "type": "string"
+        },
+        "query": {
+          "description": "Keyword or business concept to search for. Use Chinese for Chinese docs. Multiple space-separated terms are scored independently — lines matching more terms rank higher.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "type": "object"
+    }
+  }
+]

@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Code map",
+    "description": "Project-scoped code graph tools backed by codemap: search code, find symbols, read symbol detail, trace call chains and type hierarchies, inspect dependencies and graph stats, run read-only Cypher, and search project knowledge. One registration serves every workspace: each call resolves the session's working directory to its repository, starts a codemap process for that repository on first use, and recycles it after ten idle minutes."
+  }
+}

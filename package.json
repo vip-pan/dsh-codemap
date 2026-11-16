@@ -1,0 +1,50 @@
+{
+  "name": "dsh-codemap",
+  "version": "0.1.0",
+  "description": "Project-scoped code graph tools for DeepSeek Harness: one plugin serves every workspace, backed by the codemap CLI over MCP.",
+  "type": "module",
+  "license": "MIT",
+  "author": "vip-pan",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vip-pan/dsh-codemap.git"
+  },
+  "homepage": "https://github.com/vip-pan/dsh-codemap#readme",
+  "bugs": {
+    "url": "https://github.com/vip-pan/dsh-codemap/issues"
+  },
+  "keywords": [
+    "deepseek",
+    "harness",
+    "dsh",
+    "dsh-plugin",
+    "codemap",
+    "code-graph",
+    "code-index",
+    "mcp"
+  ],
+  "exports": {
+    ".": "./index.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "index.js",
+    "lib/",
+    "tools.json",
+    "cordis.patch.yml",
+    "locale/*.json",
+    "icon.svg",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20",
+    "dsh": ">=0.2.1-rc.2 <0.4.0-0"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  }
+}

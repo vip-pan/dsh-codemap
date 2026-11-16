@@ -1,0 +1,8 @@
+# dsh-codemap — project-scoped code graph tools backed by the codemap CLI.
+# One Host row serves every session and workspace: each call resolves the
+# session's working directory to a repository root, then reuses (or starts) one
+# `codemap serve -r <root>` MCP child process for that repository.
+- insert:
+    - id: codemap
+      name: dsh-codemap
+      config: {}
